@@ -1,9 +1,6 @@
 spring:
-  application:
-    name: order-service
-
   datasource:
-    url: jdbc:mysql://localhost:3306/microservices_db   # changed from mysql → localhost
+    url: jdbc:mysql://localhost:3306/microservices_db
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -14,31 +11,15 @@ spring:
     show-sql: true
 
   zipkin:
-    base-url: http://localhost:9411   # changed from host.docker.internal
+    base-url: http://localhost:9411
     enabled: true
-
-  sleuth:
-    sampler:
-      probability: 1.0
-    propagation-keys:
-      - b3
-      - X-B3-TraceId
-      - X-B3-SpanId
-      - X-B3-ParentSpanId
-      - X-B3-Sampled
-      - X-B3-Flags
-
 
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka   # changed from eurekaservice
+      defaultZone: http://localhost:8761/eureka
     register-with-eureka: true
     fetch-registry: true
-
-feign:
-  hystrix:
-    enabled: true
 
 management:
   tracing:
