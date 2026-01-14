@@ -9,18 +9,20 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
-
   zipkin:
-    base-url: http://localhost:9411
+    base-url: http://localhost:9411   # changed from host.docker.internal
     enabled: true
 
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-    register-with-eureka: true
-    fetch-registry: true
-
+  sleuth:
+    sampler:
+      probability: 1.0
+    propagation-keys:
+      - b3
+      - X-B3-TraceId
+      - X-B3-SpanId
+      - X-B3-ParentSpanId
+      - X-B3-Sampled
+      - X-B3-Flags
 management:
   tracing:
     sampling:
