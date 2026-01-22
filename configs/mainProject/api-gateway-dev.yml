@@ -13,42 +13,42 @@ spring:
         - id: order-service
           uri: lb://order-service
           predicates:
-            - Path=/api/order/**
+            - Path=/order/**
           filters:
             - StripPrefix=2
 
         - id: cart-service
           uri: lb://cart-service
           predicates:
-            - Path=/api/cart/**
+            - Path=/cart/**
           filters:
             - StripPrefix=2
 
         - id: inventory-service
           uri: lb://inventory-service
           predicates:
-            - Path=/api/inventory/**
+            - Path=/inventory/**
           filters:
             - StripPrefix=2
 
         - id: payment-service
           uri: lb://payment-service
           predicates:
-            - Path=/api/payment/**
+            - Path=/payment/**
           filters:
             - StripPrefix=2
 
         - id: product-service
           uri: lb://product-service
           predicates:
-            - Path=/api/product/**
+            - Path=/product/**
           filters:
             - StripPrefix=2
 
         - id: user-service
           uri: lb://user-service
           predicates:
-            - Path=/api/user/**
+            - Path=/user/**
           filters:
             - StripPrefix=2
 
