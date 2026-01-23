@@ -1,3 +1,6 @@
+server:
+  port: 8080
+
 spring:
   application:
     name: api-gateway
@@ -10,54 +13,50 @@ spring:
           lower-case-service-id: true
 
       routes:
-        - id: order-service
-          uri: lb://order-service
-          predicates:
-            - Path=/order/**
-          filters:
-            - StripPrefix=2
 
         - id: cart-service
           uri: lb://cart-service
           predicates:
             - Path=/cart/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
+
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order/**
+          filters:
+            - StripPrefix=1
 
         - id: inventory-service
           uri: lb://inventory-service
           predicates:
             - Path=/inventory/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
 
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/payment/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
 
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/product/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
 
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/user/**
           filters:
-            - StripPrefix=2
+            - StripPrefix=1
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
-    fetch-registry: true
-    register-with-eureka: true
-
-server:
-  port: 8080
