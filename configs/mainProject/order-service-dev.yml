@@ -1,4 +1,10 @@
+server:
+  port: 8080
+
 spring:
+  application:
+    name: api-gateway
+
   datasource:
     url: jdbc:mysql://localhost:3306/microservices_db
     username: root
@@ -7,8 +13,41 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update   # use 'validate' in production
+      ddl-auto: update
     show-sql: true
+
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true
+
+      routes:
+        - id: cart-service
+          uri: lb://cart-service
+          predicates:
+            - Path=/cart/**
+        - id: order-service
+          uri: lb://order-service
+          predicates:
+            - Path=/order/**
+        - id: inventory-service
+          uri: lb://inventory-service
+          predicates:
+            - Path=/inventory/**
+        - id: payment-service
+          uri: lb://payment-service
+          predicates:
+            - Path=/payment/**
+        - id: product-service
+          uri: lb://product-service
+          predicates:
+            - Path=/product/**
+        - id: user-service
+          uri: lb://user-service
+          predicates:
+            - Path=/user/**
 
 resilience4j:
   circuitbreaker:
@@ -18,13 +57,11 @@ resilience4j:
         minimumNumberOfCalls: 3
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
-
       inventoryService:
         slidingWindowSize: 5
         minimumNumberOfCalls: 3
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
-
       productService:
         slidingWindowSize: 5
         minimumNumberOfCalls: 3
@@ -36,3 +73,18 @@ resilience4j:
       paymentService:
         maxAttempts: 3
         waitDuration: 2s
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
