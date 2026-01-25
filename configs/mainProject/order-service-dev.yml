@@ -7,5 +7,32 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update   # use 'validate' in production
     show-sql: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      paymentService:
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+      inventoryService:
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+      productService:
+        slidingWindowSize: 5
+        minimumNumberOfCalls: 3
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
+  retry:
+    instances:
+      paymentService:
+        maxAttempts: 3
+        waitDuration: 2s
