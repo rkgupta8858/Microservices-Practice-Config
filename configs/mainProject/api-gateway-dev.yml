@@ -13,7 +13,6 @@ spring:
           lower-case-service-id: true
 
       routes:
-
         - id: cart-service
           uri: lb://cart-service
           predicates:
@@ -23,33 +22,39 @@ spring:
           uri: lb://order-service
           predicates:
             - Path=/order/**
-  
 
         - id: inventory-service
           uri: lb://inventory-service
           predicates:
             - Path=/inventory/**
 
-
         - id: payment-service
           uri: lb://payment-service
           predicates:
             - Path=/payment/**
-
 
         - id: product-service
           uri: lb://product-service
           predicates:
             - Path=/product/**
 
-
         - id: user-service
           uri: lb://user-service
           predicates:
             - Path=/user/**
 
-
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+    register-with-eureka: true
+    fetch-registry: true
+
+management:
+  tracing:
+    sampling:
+      probability: 1.0
+
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
