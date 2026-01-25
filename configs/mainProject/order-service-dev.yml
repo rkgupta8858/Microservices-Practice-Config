@@ -1,9 +1,9 @@
 server:
-  port: 8080
+  port: 8085
 
 spring:
   application:
-    name: api-gateway
+    name: order-service
 
   datasource:
     url: jdbc:mysql://localhost:3306/microservices_db
@@ -16,38 +16,19 @@ spring:
       ddl-auto: update
     show-sql: true
 
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
-      routes:
-        - id: cart-service
-          uri: lb://cart-service
-          predicates:
-            - Path=/cart/**
-        - id: order-service
-          uri: lb://order-service
-          predicates:
-            - Path=/order/**
-        - id: inventory-service
-          uri: lb://inventory-service
-          predicates:
-            - Path=/inventory/**
-        - id: payment-service
-          uri: lb://payment-service
-          predicates:
-            - Path=/payment/**
-        - id: product-service
-          uri: lb://product-service
-          predicates:
-            - Path=/product/**
-        - id: user-service
-          uri: lb://user-service
-          predicates:
-            - Path=/user/**
+  tracing:
+    sampling:
+      probability: 1.0
+
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
 
 resilience4j:
   circuitbreaker:
@@ -57,34 +38,17 @@ resilience4j:
         minimumNumberOfCalls: 3
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
+
       inventoryService:
         slidingWindowSize: 5
-        minimumNumberOfCalls: 3
         failureRateThreshold: 50
-        waitDurationInOpenState: 10s
+
       productService:
         slidingWindowSize: 5
-        minimumNumberOfCalls: 3
         failureRateThreshold: 50
-        waitDurationInOpenState: 10s
 
   retry:
     instances:
       paymentService:
         maxAttempts: 3
         waitDuration: 2s
-
-eureka:
-  client:
-    service-url:
-      defaultZone: http://localhost:8761/eureka
-    register-with-eureka: true
-    fetch-registry: true
-
-management:
-  tracing:
-    sampling:
-      probability: 1.0
-  zipkin:
-    tracing:
-      endpoint: http://localhost:9411/api/v2/spans
